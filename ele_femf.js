@@ -8,11 +8,11 @@
 const $ = new Env('枫叶_饿了么福尔魔方');
 
 const {
-    validateCarmeWithType: _0x5cfa40,
-    getCookies: _0x313a08,
+    validateCarmeWithType: _0x51cfa40,
+    getCookies: _0x313a018,
     //getUserInfoWithX: _0x4a4a5b,
     wait: _0x5ad5ca,
-    commonRequest: _0x5f3540f,
+    commonRequest: _0x5f31540f,
     getCoordinates,
     sign,
     getToken,
@@ -43,10 +43,6 @@ async function h5Req(_0x4345d5d, _0x525231fc) {
     _0x15dbe5 = _0x3d0021.split("_")[0],
     _0x4c2b9e = await sign(_0x15dbe5 + "&" + _0x395caf + "&" + _0xc3123 + "&" + JSON.stringify(_0x5231fc), process.env.ELE_CARME),
     _0xb036ce = {
-      url: "https://shopping.ele.me/h5/mtop.koubei.interactioncenter.platform.right.lottery/1.0/?jsv=2.6.1&appKey=12574478&t=" + _0x395caf + "&sign=" + _0x4c2b9e + "&api=mtop.koubei.interactioncenter.platform.right.lottery&v=1.0&type=originaljson&dataType=json&timeout=5000&subDomain=shopping&mainDomain=ele.me&H5Request=true&pageDomain=ele.me&ttid=h5%40chrome_android_87.0.4280.141&SV=5.0",
-      method: "POST",
-      headers: _0x9519bd,
-      body: _0x262d46
     };
   return tryCatchPromise(_0x2a583b => {
     request(_0xb036ce, (_0x50c447, _0x3d3170, _0x300d49) => {
@@ -81,29 +77,7 @@ async function initEnv(_0x22eacf, _0x47cef2, _0x48ccf4) {
     });
   });
 }
-async function _0x109797(_0x59c2bc, _0x44a872) {
-  const _0x182bf2 = new Date().getTime(),
-    // //{
-    //   latitude: _0x43c809,
-    //   longitude: _0x3192bc
-    // } = await getCoordinates(),
-    // {
-    //   UA: _0x1f9588,
-    //   umidtoken: _0x2ce074
-    // } = await initEnv("", _0x43c809, _0x3192bc),
-    _0x401a77 = {
-      bizScene: "MAGIC_CUBE",
-      //latitude: _0x43c809,
-      //longitude: _0x3192bc,
-      bizCode: "MAGIC_CUBE",
-      actId: "20230802212526123181213864",
-      collectionId: "20230802212526148986536967",
-      componentId: "20230803112141370370827352",
-      extParams: "{\\\"actId\\\":\\\"20230802212526123181213864\\\",\\\"bizScene\\\":\\\"MAGIC_CUBE\\\",\\\"desc\\\":\\\"魔方消消乐\\\"}",
-      requestId: "20230802212526123181213864" + _0x182bf2 + "",
-      //ua: _0x1f9588,
-      //umidToken: _0x2ce074,
-      asac: "2A22C0239QW1FOL3UUQY7U"
+
     };
   try {
     const _0x445d66 = await h5Req(_0x59c2bc, _0x401a77);
@@ -228,31 +202,7 @@ function Env(t, e) {
       });
     }
     runScript(t, e) {
-      return new Promise(s => {
-        let i = this.getdata("@chavy_boxjs_userCfgs.httpapi");
-        i = i ? i.replace(/\n/g, "").trim() : i;
-        let r = this.getdata("@chavy_boxjs_userCfgs.httpapi_timeout");
-        r = r ? 1 * r : 20;
-        r = e && e.timeout ? e.timeout : r;
-        const [o, h] = i.split("@"),
-          n = {
-            url: `http://${h}/v1/scripting/evaluate`,
-            body: {
-              script_text: t,
-              mock_type: "cron",
-              timeout: r
-            },
-            headers: {
-              "X-Key": o,
-              Accept: "*/*"
-            }
-          };
-        this.post(n, (t, e, i) => s(i));
-      }).catch(t => this.logErr(t));
-    }
-    loaddata() {
-      if (!this.isNode()) {
-        return {};
+
       }
       {
         this.fs = this.fs ? this.fs : require("fs");
