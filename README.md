@@ -1,7 +1,3 @@
-### kolikow
-#### 拉库 
-ql repo https://github.com/IGuanggg/very_Hunger.git "^elm|ele" "" "common|ql|ele_sendNotify"
-
 
 请勿将本仓库内的任何内容用于商业或非法目的，否则后果自负.
 
