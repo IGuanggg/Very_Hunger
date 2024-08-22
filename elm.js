@@ -29,13 +29,7 @@ function runScript(scriptPath) {
 }
 
 const scripts = [
-  '/ql/scripts/IGuanggg_elm_ebe/elm_2048.js',
-  '/ql/scripts/IGuanggg_elm_ebe/elm_elge.js',
-  '/ql/scripts/IGuanggg_elm_ebe/elm_hctmm',
-  '/ql/scripts/IGuanggg_elm_ebe/elm_cycg.js',
-  '/ql/scripts/IGuanggg_elm_ebe/elm_mst.js',
-  '/ql/scripts/IGuanggg_elm_ebe/elm_lyb.js',
-  '/ql/scripts/IGuanggg_elm_ebe/elm_assest.js'
+  '/ql/scripts/IGuang',
 ];
 
 async function runScripts() {
