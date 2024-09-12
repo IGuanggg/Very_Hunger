@@ -1,10 +1,10 @@
 /**
  * 变量：elmck: 必填，账号cookie，
  * cron 0 5 5 * * *
- * 2023.8.9 更新：首次发布；
+ * 2024.8.9 更新：首次发布；
  */
 
-const $ = new Env('枫叶_饿了么福尔魔方');
+const $ = new Env('饿了么福尔魔方');
 
 const {
     validateCarmeWithType: _0x4cfa40,
