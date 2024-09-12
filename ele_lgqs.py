@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # 变量：elmck: 必填，账号cookie
-# cron: 30 4 * * *
+# cron: 30 */4 * * *
 #
 
 # const $ = new Env('蓝骑士');
