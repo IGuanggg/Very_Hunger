@@ -1,11 +1,3 @@
-#
-# 变量：elmck: 必填，账号cookie
-# cron: 12 4 * * *
-#
-
-# const $ = new Env('卡皮巴拉');
-
-
 import json
 import logging
 import os
@@ -34,11 +26,12 @@ def generate_random_string(length=50):
 def get_ck_usid(ck1):
     key_value_pairs = ck1.split(";")
     for pair in key_value_pairs:
-        key, value = pair.split("=")
-        if key == "USERID":
-            return value
-        else:
-            return '账号'
+        pair = pair.strip()  # 去掉前后的空格
+        if "=" in pair:  # 确保有 '='
+            key, value = pair.split("=", 1)  # 只分割一次
+            if key == "USERID":
+                return value
+    return '账号'  # 如果没有找到 USERID，返回默认值
 
 
 def tq(txt):
@@ -70,7 +63,7 @@ def xsign(api, data, uid, sid, wua, v):
 
     try:
         r = requests.post(
-            "http://192.168.1.124:1888/api/getXSign",
+            "http://192.168.1.177:32772/api/getXSign",
             # "http://127.0.0.1:18848/api/getXSign",
             json=body
         )
@@ -116,7 +109,7 @@ def req(api, data, uid, sid, wua='False', v="1.0"):
         retries = 0
         while retries < max_retries:
             try:
-                res = requests.post(url, headers=headers, data=params, timeout=5)
+                res = requests.post(url, headers=headers, data=params, timeout=15)
                 return res
             except requests.exceptions.Timeout:
                 print("❎接口请求超时")
