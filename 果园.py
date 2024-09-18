@@ -41,7 +41,7 @@ def xsign(api, data, uid, sid, wua, v):
 
     try:
         r = requests.post(
-            "接口",
+            "http:接口",
             json=body
         )
         r.raise_for_status()
