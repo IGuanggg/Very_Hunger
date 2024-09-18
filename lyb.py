@@ -1,3 +1,5 @@
+# 需要接口
+
 import hashlib
 import os
 import time
@@ -136,7 +138,7 @@ class LYB:
 
         try:
             r = requests.post(
-                "http://elm.iiliil.cn/getxsign?token=lxg778",
+                "http://192.168.1.124:1777/api/getXSign",
                 json=body
             )
             r.raise_for_status()
