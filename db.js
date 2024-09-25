@@ -1,13 +1,12 @@
 /**
- * 饿了么0元夺宝无脑领取版
- * author:是豪豪呀
+ * 饿了0元无脑
  * 可环境变量指定SIGN地址:elmSignUrl
  * export elmSignUrl=''
  * cron: 0 14 0,8,20 * * *
  * 依赖  axios
  */
 
-const $ = new Env('MK饿了么夺宝');
+const $ = new Env('饿了么db');
 const axios = require('axios');
 const ipAddress = require('fs').readFileSync('xsign_host.txt', 'utf8')
 const elmSignUrl = process.env.elmSignUrl ? process.env.elmSignUrl : ipAddress;
