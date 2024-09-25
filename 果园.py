@@ -41,7 +41,7 @@ def xsign(api, data, uid, sid, wua, v):
 
     try:
         r = requests.post(
-            "http:接口",
+            "http://192.168.1.177:32772/api/getXSign",
             json=body
         )
         r.raise_for_status()
