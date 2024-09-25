@@ -1,109 +1,20 @@
-# 需要接口
+"""
+cron: 0 9,19 * * *
+new Env('饿了么小游戏');
+"""
 
-import hashlib
 import os
 import time
 import json
 import requests
-from urllib.parse import quote, urlencode
+from urllib.parse import quote
 
 host = 'https://acs.m.goofish.com'
 
 ck = ''
 
-def hbh5tk(tk_cookie, enc_cookie, cookie_str):
-    """
-    合并带_m_h5_tk
-    """
-    txt = cookie_str.replace(" ", "")
-    if txt[-1] != ';':
-        txt += ';'
-    cookie_parts = txt.split(';')[:-1]
-    updated = False
-    for i, part in enumerate(cookie_parts):
-        key_value = part.split('=')
-        if key_value[0].strip() in ["_m_h5_tk", " _m_h5_tk"]:
-            cookie_parts[i] = tk_cookie
-            updated = True
-        elif key_value[0].strip() in ["_m_h5_tk_enc", " _m_h5_tk_enc"]:
-            cookie_parts[i] = enc_cookie
-            updated = True
-
-    if updated:
-        return ';'.join(cookie_parts) + ';'
-    else:
-        return txt + tk_cookie + ';' + enc_cookie + ';'
-
-
-def tq(cookie_string):
-    """
-    获取_m_h5_tk
-    """
-    if not cookie_string:
-        return '-1'
-    cookie_pairs = cookie_string.split(';')
-    for pair in cookie_pairs:
-        key_value = pair.split('=')
-        if key_value[0].strip() in ["_m_h5_tk", " _m_h5_tk"]:
-            return key_value[1]
-    return '-1'
-
-
-def tq1(txt):
-    """
-    拆分cookie
-    """
-    try:
-        txt = txt.replace(" ", "")
-        if txt[-1] != ';':
-            txt += ';'
-        pairs = txt.split(";")[:-1]
-        ck_json = {}
-        for pair in pairs:
-            key, value = pair.split("=", 1)
-            ck_json[key] = value
-        return ck_json
-    except Exception as e:
-        print(f'❎Cookie解析错误: {e}')
-        return {}
-
-
-def md5(text):
-    """
-    md5加密
-    """
-    hash_md5 = hashlib.md5()
-    hash_md5.update(text.encode())
-    return hash_md5.hexdigest()
-
-
-def check_cookie(cookie):
-    url = "https://waimai-guide.ele.me/h5/mtop.alsc.personal.queryminecenter/1.0/?jsv=2.6.2&appKey=12574478"
-    headers = {
-        "Cookie": cookie,
-        "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.87 Safari/537.36"
-    }
-
-    try:
-        response = requests.get(url, headers=headers)
-        if response.status_code == 200:
-            cookie_jar = response.cookies
-            token = cookie_jar.get('_m_h5_tk', '')
-            token_cookie = "_m_h5_tk=" + token
-            enc_token = cookie_jar.get('_m_h5_tk_enc', '')
-            enc_token_cookie = "_m_h5_tk_enc=" + enc_token
-            cookie = hbh5tk(token_cookie, enc_token_cookie, cookie)
-            return cookie
-        else:
-            return None
-    except Exception as e:
-        print("解析ck错误")
-        return None
-
-
 class LYB:
     def __init__(self, cki):
-        self.ck = cki
         self.name = None
         self.cki = self.tq(cki)
         self.uid = self.cki.get("unb")
@@ -139,6 +50,12 @@ class LYB:
         try:
             r = requests.post(
                 "http://192.168.1.177:32772/api/getXSign",
+                #"http://3.xjyyds.cf:18848/api/getXSign",
+                #"http://124.71.214.109:9999/api/getXSign",
+                #"http://x111.bdwl.asia/api/getXSign",
+                #"http://192.168.1.124:1888/api/getXSign",
+                #"http://124.70.10.200:18848/api/getXSign",
+                #"http://124.71.214.109:9999/api/getXSign",
                 json=body
             )
             r.raise_for_status()
@@ -150,7 +67,7 @@ class LYB:
             print(f'❎请求签名服务器错误: {e}')
             return None
 
-    def req1(self, api, data, wua='False', v="1.0"):
+    def req(self, api, data, wua='False', v="1.0"):
         try:
             if type(data) == dict:
                 data = json.dumps(data)
@@ -197,46 +114,17 @@ class LYB:
             print(f'❎请求接口失败: {e}')
             return None
 
-    def req(self, api, data, v="1.0"):
-        try:
-            cookie = check_cookie(self.ck)
-            headers = {
-                "authority": "shopping.ele.me",
-                "accept": "application/json",
-                "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
-                "cache-control": "no-cache",
-                "content-type": "application/x-www-form-urlencoded",
-                "cookie": cookie,
-                "user-agent": "Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36"
-            }
-            timestamp = int(time.time() * 1000)
-            data_str = json.dumps(data)
-            token = tq(cookie)
-            token_part = token.split("_")[0]
-
-            sign_str = f"{token_part}&{timestamp}&12574478&{data_str}"
-            sign = md5(sign_str)
-            url = f"https://guide-acs.m.taobao.com/h5/{api}/{v}/?jsv=2.6.1&appKey=12574478&t={timestamp}&sign={sign}&api={api}&v={v}&type=originaljson&dataType=json"
-            data1 = urlencode({'data': data_str})
-            r = requests.post(url, headers=headers, data=data1)
-            if r:
-                return r
-            else:
-                return None
-        except Exception as e:
-            return None
-
     def login(self):
         api1 = 'mtop.alsc.user.detail.query'
-        data1 = {}
+        data1 = json.dumps({})
         try:
-            res1 = self.req(api1, data1, "1.0")
+            res1 = self.req(api1, data1, 'False', "1.0")
             if res1.json()['ret'][0] == 'SUCCESS::调用成功':
                 self.name = res1.json()["data"]["encryptMobile"]
                 api = 'mtop.koubei.interaction.center.common.queryintegralproperty.v2'
-                data = {"templateIds": "[\"1404\"]"}
+                data = json.dumps({"templateIds": "[\"1404\"]"})
                 try:
-                    res = self.req(api, data, "1.0")
+                    res = self.req(api, data, 'False', "1.0")
                     if res.json()['ret'][0] == 'SUCCESS::调用成功':
                         print(f'[{self.name}] ✅登录成功,乐园币----[{res.json()["data"]["data"]["1404"]["count"]}]')
                         return True
@@ -263,23 +151,18 @@ class LYB:
 
     def sign(self):
         api = 'mtop.ele.biz.growth.task.event.pageview'
-        data = {"collectionId": "1380", "missionId": "23778002", "actionCode": "PAGEVIEW",
-                           "pageFrom": "a13.b_activity_kb_m71293", "viewTime": "15", "bizScene": "game_center_signin",
-                           "accountPlan": "KB_ORCHARD", "sync": "true", "asac": "2A24112EX1QYGWU29IXM1H"}
+        data = json.dumps({"collectionId":"1380","missionId":"23778002","actionCode":"PAGEVIEW","pageFrom":"a13.b_activity_kb_m71293","viewTime":"15","bizScene":"game_center_signin","accountPlan":"KB_ORCHARD","sync":"false","asac":"2A24112EX1QYGWU29IXM1H"})
         try:
-            res = self.req(api, data, "1.0")
+            res = self.req(api, data, 'False', "1.0")
             if res.json()["ret"][0] == 'SUCCESS::接口调用成功':
                 print(f'[{self.name}] ✅签到成功')
             else:
                 if res.json()["ret"][0] == '405::行为受限':
                     print(f"[{self.name}] ❎翻倍奖励签到失败，尝试普通签到")
                     api1 = 'mtop.koubei.interactioncenter.sign.component.recordsignin'
-                    data1 = {"bizScene": "game_center_signin", "copyId": "20240530133724118306801071",
-                                        "extInfo": "{\"prizeId\":\"11\"}", "longitude": "99.05759390443563",
-                                        "latitude": "99.69377588108182",
-                                        "locationInfos": "[\"{\\\"lng\\\":\\\"99.05759390443563\\\",\\\"lat\\\":\\\"99.69377588108182\\\"}\"]"}
+                    data1 = json.dumps({"bizScene":"game_center_signin","copyId":"20240530133724118306801071","extInfo":"{\"prizeId\":\"11\"}","longitude":"99.05759390443563","latitude":"99.69377588108182","locationInfos":"[\"{\\\"lng\\\":\\\"99.05759390443563\\\",\\\"lat\\\":\\\"99.69377588108182\\\"}\"]"})
                     try:
-                        res1 = self.req(api1, data1, "1.0")
+                        res1 = self.req(api1, data1, 'False', "1.0")
                         if res.json()["ret"][0] == 'SUCCESS::接口调用成功':
                             amount = res1.json()['data']['data']['totalReward'][0]['prizeValue']
                             print(f'[{self.name}] ✅签到成功,获得--[{amount}]乐园币')
@@ -301,14 +184,14 @@ class LYB:
             "accountPlan": "HAVANA_COMMON"
         })
         try:
-            res = self.req1(api, data, 'False', "1.0")
+            res = self.req(api, data, 'False', "1.0")
             if res.json()["ret"][0] == 'SUCCESS::接口调用成功':
                 for y in res.json()['data']['mlist']:
                     if y['name'] != "邀请好友助力":
                         for o in y['missionStageDTOS']:
                             if o['rewardStatus'] == "TODO" or o['status'] == "RUNNING":
                                 api = 'mtop.ele.biz.growth.task.event.pageview'
-                                data = {
+                                data = json.dumps({
                                     "sync": "true",
                                     "collectionId": "839",
                                     "missionId": y['missionDefId'],
@@ -316,9 +199,9 @@ class LYB:
                                     "asac": "2A24112EX1QYGWU29IXM1H",
                                     "actionCode": "PAGEVIEW",
                                     "accountPlan": "HAVANA_COMMON"
-                                }
+                                })
                                 try:
-                                    res = self.req(api, data, "1.0")
+                                    res = self.req(api, data, 'False', "1.0")
                                     if res.json()["ret"][0] == 'SUCCESS::接口调用成功':
                                         print(f"[{self.name}] ✅任务完成")
                                         if y['missionDefId'] == '14612001':
@@ -326,16 +209,16 @@ class LYB:
                                         else:
                                             count = '1'
                                         api = 'mtop.ele.biz.growth.task.core.receiveprize'
-                                        data = {
+                                        data = json.dumps({
                                             "missionCollectionId": "839",
                                             "missionId": y['missionDefId'],
                                             "locationInfos": "[\"{\\\"lng\\\":\\\"99.20328782498837\\\",\\\"lat\\\":\\\"99.88705499842763\\\"}\"]",
                                             "bizScene": "game_center",
                                             "accountPlan": "HAVANA_COMMON",
                                             "count": count
-                                        }
+                                        })
                                         try:
-                                            res = self.req(api, data, "1.0")
+                                            res = self.req(api, data, 'False', "1.0")
                                             if res.json()["ret"][0] == 'SUCCESS::接口调用成功':
                                                 amount = res.json()["data"]["rlist"][0]["value"]
                                                 print(f"[{self.name}] ✅领取奖励成功,获得--[{amount}]乐园币")
